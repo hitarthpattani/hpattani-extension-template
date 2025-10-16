@@ -1,0 +1,23 @@
+operations:
+  view:
+    - type: web
+      impl: index.html
+actions: actions
+web: web-src
+hooks:
+  pre-app-build: node ../../hooks/pre-app-build.js
+  pre-app-deploy: node ../../hooks/pre-app-deploy.js
+runtimeManifest:
+  packages:
+    dx-excshell-1:
+      license: Apache-2.0
+      actions:
+        generic:
+          function: ../../build/actions/generic/index.js
+          web: 'yes'
+          runtime: nodejs:22
+          inputs:
+            LOG_LEVEL: debug
+          annotations:
+            require-adobe-auth: true
+            final: true
