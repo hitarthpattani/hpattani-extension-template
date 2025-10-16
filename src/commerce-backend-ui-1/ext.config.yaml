@@ -5,8 +5,8 @@ operations:
 actions: actions
 web: web-src
 hooks:
-  pre-app-build: node ../../hooks/pre-app-build.js
-  pre-app-deploy: node ../../hooks/pre-app-deploy.js
+  pre-app-build: node hooks/pre-app-build.js
+  pre-app-deploy: node hooks/pre-app-deploy.js
 runtimeManifest:
   packages:
     dx-excshell-1:
