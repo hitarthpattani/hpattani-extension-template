@@ -48,7 +48,7 @@ const ActionsForm: React.FC<ActionsFormProps> = props => {
     stateJSON: keyof Pick<ActionsFormState, 'actionHeaders' | 'actionParams'>,
     stateValid: keyof Pick<ActionsFormState, 'actionHeadersValid' | 'actionParamsValid'>
   ): void => {
-    let content: Record<string, any> | null = null
+    let content: Record<string, unknown> | null = null
     let validStr: 'valid' | 'invalid' | null = null
 
     if (input) {
@@ -69,8 +69,8 @@ const ActionsForm: React.FC<ActionsFormProps> = props => {
     const actionName = state.actionSelected
     if (!actionName) return
 
-    const headers: Record<string, any> = state.actionHeaders || {}
-    const params: Record<string, any> = state.actionParams || {}
+    const headers: Record<string, unknown> = state.actionHeaders || {}
+    const params: Record<string, unknown> = state.actionParams || {}
     const startTime = Date.now()
 
     // all headers to lowercase

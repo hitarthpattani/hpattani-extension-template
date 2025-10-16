@@ -7,18 +7,17 @@
 import type { AdobeIntegrationProps } from '../../types'
 
 // ActionsForm component props extend the common Adobe integration props
-export interface ActionsFormProps extends AdobeIntegrationProps {
-  // Additional form-specific props can be added here
-}
+// Using type alias since no additional properties are needed
+export type ActionsFormProps = AdobeIntegrationProps
 
 // Define types for the component state
 export interface ActionsFormState {
   actionSelected: string | null
-  actionResponse: any
+  actionResponse: unknown
   actionResponseError: string | null
-  actionHeaders: Record<string, any> | null
+  actionHeaders: Record<string, unknown> | null
   actionHeadersValid: 'valid' | 'invalid' | null
-  actionParams: Record<string, any> | null
+  actionParams: Record<string, unknown> | null
   actionParamsValid: 'valid' | 'invalid' | null
   actionInvokeInProgress: boolean
   actionResult: string

@@ -3,13 +3,11 @@
  */
 
 const { Config } = require('@adobe/aio-sdk').Core
-const fs = require('fs')
 const fetch = require('node-fetch')
 
 // get action url
 const namespace = Config.get('runtime.namespace')
 const hostname = Config.get('cna.hostname') || 'adobeioruntime.net'
-const packagejson = JSON.parse(fs.readFileSync('package.json').toString())
 const runtimePackage = 'dx-excshell-1'
 const actionUrl = `https://${namespace}.${hostname}/api/v1/web/${runtimePackage}/generic`
 

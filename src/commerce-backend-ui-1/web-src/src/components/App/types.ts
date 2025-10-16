@@ -8,6 +8,5 @@
 import type { AdobeIntegrationProps } from '../../types'
 
 // App component props extend the common Adobe integration props
-export interface AppProps extends AdobeIntegrationProps {
-  // Additional app-specific props can be added here
-}
+// Using type alias since no additional properties are needed
+export type AppProps = AdobeIntegrationProps

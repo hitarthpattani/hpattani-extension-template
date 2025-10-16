@@ -28,7 +28,7 @@ interface GenericActionParams extends ActionParams {
   LOG_LEVEL?: string
   __ow_headers?: {
     authorization?: string
-    [key: string]: any
+    [key: string]: unknown
   }
 }
 
@@ -70,7 +70,7 @@ async function main(params: GenericActionParams): Promise<ActionResponse | Actio
     if (!res.ok) {
       throw new Error('request to ' + apiEndpoint + ' failed with status code ' + res.status)
     }
-    const content: any = await res.json()
+    const content = (await res.json()) as Record<string, unknown>
     const response: ActionResponse = {
       statusCode: 200,
       body: content

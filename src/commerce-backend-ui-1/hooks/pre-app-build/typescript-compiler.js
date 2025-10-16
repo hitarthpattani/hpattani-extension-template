@@ -101,4 +101,3 @@ class TypeScriptCompiler {
 }
 
 module.exports = TypeScriptCompiler
-

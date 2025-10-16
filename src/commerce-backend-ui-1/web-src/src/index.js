@@ -8,6 +8,8 @@ import ReactDOM from 'react-dom'
 
 import Runtime, { init } from '@adobe/exc-app'
 
+// App is used in JSX below
+// eslint-disable-next-line no-unused-vars
 import App from './components/App'
 import './index.css'
 
@@ -44,7 +46,7 @@ function bootstrapInExcShell() {
   // runtime.heroClick = () => window.alert('Did I ever tell you you\'re my hero?')
 
   // ready event brings in authentication/user info
-  runtime.on('ready', ({ imsOrg, imsToken, imsProfile, locale }) => {
+  runtime.on('ready', ({ imsOrg, imsToken, imsProfile }) => {
     // tell the exc-runtime object we are done
     runtime.done()
     console.log('Ready! received imsProfile:', imsProfile)

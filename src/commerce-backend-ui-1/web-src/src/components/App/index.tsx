@@ -49,12 +49,14 @@ const App: React.FC<AppProps> = props => {
 
   // use exc runtime event handlers
   // respond to configuration change events (e.g. user switches org)
-  props.runtime.on('configuration', ({ imsOrg, imsToken, locale }: ConfigurationData) => {
+  props.runtime.on('configuration', (data: unknown) => {
+    const { imsOrg, imsToken, locale } = data as ConfigurationData
     console.log('configuration change', { imsOrg, imsToken, locale })
   })
 
   // respond to history change events
-  props.runtime.on('history', ({ type, path }: HistoryData) => {
+  props.runtime.on('history', (data: unknown) => {
+    const { type, path } = data as HistoryData
     console.log('history change', { type, path })
   })
 

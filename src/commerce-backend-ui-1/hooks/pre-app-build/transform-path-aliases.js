@@ -172,4 +172,3 @@ class TransformPathAliases {
 }
 
 module.exports = TransformPathAliases
-

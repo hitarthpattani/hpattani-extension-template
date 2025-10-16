@@ -28,18 +28,18 @@ function stringParameters(params: ActionParams): string {
  * A parameter is missing if its value is undefined or ''.
  * A value of 0 or null is not considered as missing.
  *
- * @param {any} obj object to check.
+ * @param {Record<string, unknown>} obj object to check.
  * @param {Array<string>} required list of required keys.
  *        Each key can contain a dot notation a.b.c to check for nested key.
  *
  * @returns {Array<string>} list of missing keys.
  */
-function getMissingKeys(obj: any, required: string[]): string[] {
+function getMissingKeys(obj: Record<string, unknown>, required: string[]): string[] {
   return required.filter(r => {
     const splits: string[] = r.split('.')
     const last: string = splits[splits.length - 1]
-    const traverse: any = splits.slice(0, -1).reduce((tObj, split) => {
-      tObj = tObj[split] || {}
+    const traverse: Record<string, unknown> = splits.slice(0, -1).reduce((tObj, split) => {
+      tObj = (tObj[split] as Record<string, unknown>) || {}
       return tObj
     }, obj)
     return traverse[last] === undefined || traverse[last] === '' // missing default params are empty string
@@ -97,8 +97,8 @@ function checkMissingRequestInputs(
  */
 function getBearerToken(params: ActionParams): string | undefined {
   const headers: ActionHeaders = (params.__ow_headers as ActionHeaders) || {}
-  const authorization: any = headers.authorization
-  if (authorization?.startsWith('Bearer ')) {
+  const authorization = headers.authorization as unknown
+  if (typeof authorization === 'string' && authorization.startsWith('Bearer ')) {
     return authorization.substring('Bearer '.length)
   }
   return undefined
@@ -116,7 +116,11 @@ function getBearerToken(params: ActionParams): string | undefined {
  *
  * @returns {ActionErrorResponse} the error object, ready to be returned from the action main function.
  */
-function errorResponse(statusCode: number, message: string, logger?: any): ActionErrorResponse {
+function errorResponse(
+  statusCode: number,
+  message: string,
+  logger?: { info: (msg: string) => void }
+): ActionErrorResponse {
   if (logger && typeof logger.info === 'function') {
     logger.info(`${statusCode}: ${message}`)
   }

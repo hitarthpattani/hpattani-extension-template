@@ -21,7 +21,7 @@ export interface IMSProps {
  */
 export interface RuntimeProps {
   /** Event handler for runtime events (configuration, history, etc.) */
-  on: (event: string, callback: (data: any) => void) => void
+  on: (event: string, callback: (data: unknown) => void) => void
 }
 
 /**
