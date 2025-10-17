@@ -57,6 +57,4 @@ export interface AdobeIntegrationProps {
   runtime: RuntimeProps
   /** Identity Management Service */
   ims: IMSProps
-  /** Headers for API calls */
-  headers: Record<string, unknown>
 }

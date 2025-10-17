@@ -3,12 +3,7 @@
  */
 
 import React, { Component } from 'react'
-import { Provider, defaultTheme, Grid, View } from '@adobe/react-spectrum'
-import { HashRouter as Router, Routes, Route } from 'react-router-dom'
-import SideBar from '@components/SideBar'
-import ActionsForm from '@components/ActionsForm'
-import { Home } from '@components/Home'
-import { About } from '@components/About'
+import { ExtensionRegistration } from '@components/ExtensionRegistration'
 import type { AppProps } from './types'
 import type { ConfigurationData, HistoryData } from '@web/types'
 import type { ErrorBoundaryState, ErrorBoundaryProps } from '@web/types/ui'
@@ -46,7 +41,6 @@ class CustomErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
 const App: React.FC<AppProps> = props => {
   console.log('runtime object:', props.runtime)
   console.log('ims object:', props.ims)
-  console.log('headers object:', props.headers)
 
   // use exc runtime event handlers
   // respond to configuration change events (e.g. user switches org)
@@ -63,33 +57,7 @@ const App: React.FC<AppProps> = props => {
 
   return (
     <CustomErrorBoundary>
-      <Router>
-        <Provider theme={defaultTheme} colorScheme={'light'}>
-          <Grid
-            areas={['sidebar content']}
-            columns={['256px', '3fr']}
-            rows={['auto']}
-            height="100vh"
-            gap="size-100"
-          >
-            <View gridArea="sidebar" backgroundColor="gray-200" padding="size-200">
-              <SideBar></SideBar>
-            </View>
-            <View gridArea="content" padding="size-200">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route
-                  path="/actions"
-                  element={
-                    <ActionsForm runtime={props.runtime} ims={props.ims} headers={props.headers} />
-                  }
-                />
-                <Route path="/about" element={<About />} />
-              </Routes>
-            </View>
-          </Grid>
-        </Provider>
-      </Router>
+      <ExtensionRegistration runtime={props.runtime} ims={props.ims} />
     </CustomErrorBoundary>
   )
 }
