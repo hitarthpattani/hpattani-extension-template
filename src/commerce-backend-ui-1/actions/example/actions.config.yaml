@@ -1,0 +1,9 @@
+generic:
+  function: ../../../../build/actions/example/generic/index.js
+  web: 'yes'
+  runtime: nodejs:22
+  inputs:
+    LOG_LEVEL: debug
+  annotations:
+    require-adobe-auth: true
+    final: true

@@ -15,13 +15,13 @@
 
 import fetch from 'node-fetch'
 import { Core } from '@adobe/aio-sdk'
-import type { ActionParams, ActionResponse, ActionErrorResponse } from '../types'
+import type { ActionParams, ActionResponse, ActionErrorResponse } from '@actions/types'
 import {
   errorResponse,
   getBearerToken,
   stringParameters,
   checkMissingRequestInputs
-} from '../utils'
+} from '@actions/utils'
 
 // Define the expected params interface
 interface GenericActionParams extends ActionParams {
@@ -87,4 +87,4 @@ async function main(params: GenericActionParams): Promise<ActionResponse | Actio
   }
 }
 
-exports.main = main
+export { main }
