@@ -26,13 +26,16 @@ try {
   bootstrapRaw()
 }
 
+function renderApplication(runtime, ims, headers) {
+  ReactDOM.render(
+    <App runtime={runtime} ims={ims} headers={headers} />,
+    document.getElementById('root')
+  )
+}
+
 function bootstrapRaw() {
   /* **here you can mock the exc runtime and ims objects** */
-  const mockRuntime = { on: () => {} }
-  const mockIms = {}
-
-  // render the actual react application and pass along the runtime object to make it available to the App
-  ReactDOM.render(<App runtime={mockRuntime} ims={mockIms} />, document.getElementById('root'))
+  renderApplication({ on: () => {} }, {}, {})
 }
 
 function bootstrapInExcShell() {
@@ -55,8 +58,12 @@ function bootstrapInExcShell() {
       org: imsOrg,
       token: imsToken
     }
+    let headers = {
+      Authorization: `Bearer ${imsToken}`,
+      'x-gw-ims-org-id': imsOrg
+    }
     // render the actual react application and pass along the runtime and ims objects to make it available to the App
-    ReactDOM.render(<App runtime={runtime} ims={ims} />, document.getElementById('root'))
+    renderApplication(runtime, ims, headers)
   })
 
   // set solution info, shortTitle is used when window is too small to display full title

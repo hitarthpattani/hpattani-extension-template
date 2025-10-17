@@ -1,7 +1,14 @@
 module.exports = {
   devtool: 'inline-source-map',
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      // Force webpack to use the host app's peer dependencies
+      // This prevents duplicate instances when using local packages
+      'react': path.resolve(__dirname, 'node_modules/react'),
+      'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+      'react-router-dom': path.resolve(__dirname, 'node_modules/react-router-dom')
+    }
   },
   module: {
     rules: [

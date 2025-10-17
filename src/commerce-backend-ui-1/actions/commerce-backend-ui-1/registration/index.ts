@@ -13,29 +13,15 @@
  *   - Make sure to validate these changes against your security requirements before deploying the action
  */
 
-import fetch from 'node-fetch'
 import { Core } from '@adobe/aio-sdk'
+import { errorResponse, stringParameters, checkMissingRequestInputs } from '@actions/utils'
+import { UserManager, User } from '@lib/user-manager'
 import type { ActionParams, ActionResponse, ActionErrorResponse } from '@actions/types'
-import {
-  errorResponse,
-  getBearerToken,
-  stringParameters,
-  checkMissingRequestInputs
-} from '@actions/utils'
-
-// Define the expected params interface
-interface GenericActionParams extends ActionParams {
-  LOG_LEVEL?: string
-  __ow_headers?: {
-    authorization?: string
-    [key: string]: unknown
-  }
-}
 
 // main function that will be executed by Adobe I/O Runtime
-async function main(params: GenericActionParams): Promise<ActionResponse | ActionErrorResponse> {
+async function main(params: ActionParams): Promise<ActionResponse | ActionErrorResponse> {
   // create a Logger
-  const logger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' })
+  const logger = Core.Logger('main', { level: (params.LOG_LEVEL as string) || 'info' })
 
   try {
     // 'info' is the default level if not set
@@ -48,7 +34,7 @@ async function main(params: GenericActionParams): Promise<ActionResponse | Actio
     const requiredParams: string[] = [
       /* add required params */
     ]
-    const requiredHeaders: string[] = ['Authorization']
+    const requiredHeaders: string[] = ['authorization']
     const errorMessage: string | null = checkMissingRequestInputs(
       params,
       requiredParams,
@@ -59,31 +45,36 @@ async function main(params: GenericActionParams): Promise<ActionResponse | Actio
       return errorResponse(400, errorMessage, logger)
     }
 
-    // extract the user Bearer token from the Authorization header
-    const _token: string | undefined = getBearerToken(params)
+    // Extract name parameter with proper validation and defaults
+    const name: string = (params.name as string)?.trim() || 'Guest'
 
-    // replace this with the api you want to access
-    const apiEndpoint: string = 'https://adobeioruntime.net/api/v1'
+    // Create UserManager instance and get user with trimmed name
+    const userManager = new UserManager()
+    const user: User = userManager.get(name)
 
-    // fetch content from external api endpoint
-    const res = await fetch(apiEndpoint)
-    if (!res.ok) {
-      throw new Error('request to ' + apiEndpoint + ' failed with status code ' + res.status)
-    }
-    const content = (await res.json()) as Record<string, unknown>
     const response: ActionResponse = {
       statusCode: 200,
-      body: content
+      body: {
+        message: `Hello, ${user.name}!`
+      }
     }
 
     // log the response status code
     logger.info(`${response.statusCode}: successful request`)
     return response
   } catch (error) {
-    // log any server errors
-    logger.error(error)
-    // return with 500
-    return errorResponse(500, 'server error', logger)
+    // Handle UserManager validation errors as client errors (400)
+    if (error instanceof Error && error.message.includes('Name must be')) {
+      logger.warn(`UserManager validation error: ${error.message}`)
+      return errorResponse(400, `Invalid input: ${error.message}`, logger)
+    }
+
+    // Handle unexpected errors as server errors (500)
+    logger.error(
+      'Unexpected error in generic action:',
+      error instanceof Error ? error.message : String(error)
+    )
+    return errorResponse(500, 'Internal server error', logger)
   }
 }
 

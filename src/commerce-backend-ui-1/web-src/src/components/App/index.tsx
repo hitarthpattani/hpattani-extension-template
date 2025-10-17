@@ -46,6 +46,7 @@ class CustomErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
 const App: React.FC<AppProps> = props => {
   console.log('runtime object:', props.runtime)
   console.log('ims object:', props.ims)
+  console.log('headers object:', props.headers)
 
   // use exc runtime event handlers
   // respond to configuration change events (e.g. user switches org)
@@ -79,7 +80,9 @@ const App: React.FC<AppProps> = props => {
                 <Route path="/" element={<Home />} />
                 <Route
                   path="/actions"
-                  element={<ActionsForm runtime={props.runtime} ims={props.ims} />}
+                  element={
+                    <ActionsForm runtime={props.runtime} ims={props.ims} headers={props.headers} />
+                  }
                 />
                 <Route path="/about" element={<About />} />
               </Routes>
