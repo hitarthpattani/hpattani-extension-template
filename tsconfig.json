@@ -54,14 +54,14 @@
     "src/commerce-backend-ui-1/actions/**/*",
     "src/commerce-backend-ui-1/lib/**/*",
     "src/commerce-backend-ui-1/scripts/**/*",
-    "src/commerce-backend-ui-1/test/**/*"
+    "src/commerce-backend-ui-1/test/**/*",
+    "src/commerce-backend-ui-1/e2e/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "build",
     "coverage",
-    "src/commerce-backend-ui-1/e2e",
     "src/commerce-backend-ui-1/web-src/src/exc-runtime.js"
   ]
 }
