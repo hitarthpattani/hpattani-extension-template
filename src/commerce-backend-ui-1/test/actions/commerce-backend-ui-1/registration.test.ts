@@ -3,21 +3,14 @@
  */
 
 import { Core } from '@adobe/aio-sdk'
-import type { ActionParams, ActionResponse, ActionErrorResponse } from '@actions/types'
+import type { ActionParams, ActionResponse } from '@actions/types'
+import { EXTENSION_ID } from '@actions/constants'
 import * as action from '../../../actions/commerce-backend-ui-1/registration/index'
 
 jest.mock('@adobe/aio-sdk', () => ({
   Core: {
     Logger: jest.fn()
   }
-}))
-
-const mockUserManagerGet = jest.fn()
-
-jest.mock('@lib/user-manager', () => ({
-  UserManager: jest.fn().mockImplementation(() => ({
-    get: mockUserManagerGet
-  }))
 }))
 
 const mockLoggerInstance = {
@@ -34,159 +27,80 @@ beforeEach(() => {
 
 describe('registration action', () => {
   describe('successful scenarios', () => {
-    it('should return success response with default "Guest" name when no name is provided', async () => {
-      mockUserManagerGet.mockReturnValue({ name: 'Guest' })
-
-      const params: ActionParams = {
-        __ow_headers: { authorization: 'Bearer token' }
-      }
-
-      const response = (await action.main(params)) as ActionResponse
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual({
-        message: 'Hello, Guest!'
-      })
-      expect(mockUserManagerGet).toHaveBeenCalledWith('Guest')
-      expect(mockLoggerInstance.info).toHaveBeenCalledWith('Calling the main action')
-      expect(mockLoggerInstance.info).toHaveBeenCalledWith('200: successful request')
-    })
-
-    it('should return success response with custom name when name is provided', async () => {
-      mockUserManagerGet.mockReturnValue({ name: 'John' })
-
-      const params: ActionParams = {
-        __ow_headers: { authorization: 'Bearer token' },
-        name: 'John'
-      }
-
-      const response = (await action.main(params)) as ActionResponse
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual({
-        message: 'Hello, John!'
-      })
-      expect(mockUserManagerGet).toHaveBeenCalledWith('John')
-    })
-
-    it('should trim whitespace from name parameter', async () => {
-      mockUserManagerGet.mockReturnValue({ name: 'Alice' })
-
-      const params: ActionParams = {
-        __ow_headers: { authorization: 'Bearer token' },
-        name: '  Alice  '
-      }
-
-      const response = (await action.main(params)) as ActionResponse
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual({
-        message: 'Hello, Alice!'
-      })
-      expect(mockUserManagerGet).toHaveBeenCalledWith('Alice')
-    })
-
-    it('should use "Guest" when name is empty string', async () => {
-      mockUserManagerGet.mockReturnValue({ name: 'Guest' })
-
-      const params: ActionParams = {
-        __ow_headers: { authorization: 'Bearer token' },
-        name: ''
-      }
-
-      const response = (await action.main(params)) as ActionResponse
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual({
-        message: 'Hello, Guest!'
-      })
-      expect(mockUserManagerGet).toHaveBeenCalledWith('Guest')
-    })
-  })
-
-  describe('error scenarios', () => {
-    it('should return 400 error when authorization header is missing', async () => {
+    it('should return registration configuration with menu items and page', async () => {
       const params: ActionParams = {
         __ow_headers: {}
       }
 
-      const response = (await action.main(params)) as ActionErrorResponse
+      const response = (await action.main(params)) as ActionResponse
 
-      expect(response.error.statusCode).toBe(400)
-      expect(response.error.body.error).toContain('authorization')
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toHaveProperty('registration')
+      expect(response.body.registration).toHaveProperty('menuItems')
+      expect(response.body.registration).toHaveProperty('page')
+      expect(mockLoggerInstance.info).toHaveBeenCalledWith('Calling the main action')
+      expect(mockLoggerInstance.info).toHaveBeenCalledWith('200: successful request')
     })
 
-    it('should return 400 error when UserManager throws validation error', async () => {
-      mockUserManagerGet.mockImplementation((name: string) => {
-        if (name === 'InvalidUser') {
-          throw new Error('Name must be a non-empty string')
+    it('should return correct menu items structure', async () => {
+      const params: ActionParams = {
+        __ow_headers: {}
+      }
+
+      const response = (await action.main(params)) as ActionResponse
+      const registration = response.body.registration as {
+        menuItems: Array<Record<string, unknown>>
+        page: Record<string, unknown>
+      }
+
+      expect(registration.menuItems).toEqual([
+        {
+          id: `${EXTENSION_ID}::first`,
+          title: 'Adobe Commerce First App on App Builder',
+          parent: `${EXTENSION_ID}::apps`,
+          sortOrder: 1
+        },
+        {
+          id: `${EXTENSION_ID}::apps`,
+          title: 'Apps',
+          isSection: true,
+          sortOrder: 100
         }
-        return { name }
-      })
-
-      const params: ActionParams = {
-        __ow_headers: { authorization: 'Bearer token' },
-        name: 'InvalidUser'
-      }
-
-      const response = (await action.main(params)) as ActionErrorResponse
-
-      expect(response.error.statusCode).toBe(400)
-      expect(response.error.body.error).toContain('Invalid input')
-      expect(response.error.body.error).toContain('Name must be')
-      expect(mockLoggerInstance.warn).toHaveBeenCalledWith(
-        expect.stringContaining('UserManager validation error')
-      )
+      ])
     })
 
-    it('should return 500 error when UserManager throws unexpected error', async () => {
-      mockUserManagerGet.mockImplementation(() => {
-        throw new Error('Database connection failed')
-      })
-
+    it('should return correct page configuration', async () => {
       const params: ActionParams = {
-        __ow_headers: { authorization: 'Bearer token' },
-        name: 'John'
+        __ow_headers: {}
       }
 
-      const response = (await action.main(params)) as ActionErrorResponse
+      const response = (await action.main(params)) as ActionResponse
+      const registration = response.body.registration as {
+        menuItems: Array<Record<string, unknown>>
+        page: { title: string }
+      }
 
-      expect(response.error.statusCode).toBe(500)
-      expect(response.error.body.error).toBe('Internal server error')
-      expect(mockLoggerInstance.error).toHaveBeenCalledWith(
-        'Unexpected error in generic action:',
-        'Database connection failed'
-      )
+      expect(registration.page).toEqual({
+        title: 'Adobe Commerce First App on App Builder'
+      })
     })
 
-    it('should return 500 error when UserManager throws non-Error exception', async () => {
-      mockUserManagerGet.mockImplementation(() => {
-        throw 'String error'
-      })
-
+    it('should work without any parameters', async () => {
       const params: ActionParams = {
-        __ow_headers: { authorization: 'Bearer token' },
-        name: 'John'
+        __ow_headers: {}
       }
 
-      const response = (await action.main(params)) as ActionErrorResponse
+      const response = (await action.main(params)) as ActionResponse
 
-      expect(response.error.statusCode).toBe(500)
-      expect(response.error.body.error).toBe('Internal server error')
-      expect(mockLoggerInstance.error).toHaveBeenCalledWith(
-        'Unexpected error in generic action:',
-        'String error'
-      )
+      expect(response.statusCode).toBe(200)
+      expect(response.body.registration).toBeDefined()
     })
   })
 
   describe('logging', () => {
     it('should log debug information when LOG_LEVEL is debug', async () => {
-      mockUserManagerGet.mockReturnValue({ name: 'John' })
-
       const params: ActionParams = {
-        __ow_headers: { authorization: 'Bearer token' },
-        name: 'John',
+        __ow_headers: {},
         LOG_LEVEL: 'debug'
       }
 
@@ -196,10 +110,8 @@ describe('registration action', () => {
     })
 
     it('should create logger with custom log level from params', async () => {
-      mockUserManagerGet.mockReturnValue({ name: 'John' })
-
       const params: ActionParams = {
-        __ow_headers: { authorization: 'Bearer token' },
+        __ow_headers: {},
         LOG_LEVEL: 'warn'
       }
 
@@ -209,15 +121,30 @@ describe('registration action', () => {
     })
 
     it('should create logger with default "info" level when LOG_LEVEL is not provided', async () => {
-      mockUserManagerGet.mockReturnValue({ name: 'Guest' })
-
       const params: ActionParams = {
-        __ow_headers: { authorization: 'Bearer token' }
+        __ow_headers: {}
       }
 
       await action.main(params)
 
       expect(Core.Logger).toHaveBeenCalledWith('main', { level: 'info' })
+    })
+  })
+
+  describe('extension ID usage', () => {
+    it('should use EXTENSION_ID constant in menu item IDs', async () => {
+      const params: ActionParams = {
+        __ow_headers: {}
+      }
+
+      const response = (await action.main(params)) as ActionResponse
+      const registration = response.body.registration as {
+        menuItems: Array<{ id: string; parent?: string }>
+      }
+
+      expect(registration.menuItems[0].id).toContain(EXTENSION_ID)
+      expect(registration.menuItems[0].parent).toContain(EXTENSION_ID)
+      expect(registration.menuItems[1].id).toContain(EXTENSION_ID)
     })
   })
 })

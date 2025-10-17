@@ -15,8 +15,8 @@
 
 import { Core } from '@adobe/aio-sdk'
 import { errorResponse, stringParameters, checkMissingRequestInputs } from '@actions/utils'
-import { UserManager, User } from '@lib/user-manager'
 import type { ActionParams, ActionResponse, ActionErrorResponse } from '@actions/types'
+import { EXTENSION_ID } from '@actions/constants'
 
 // main function that will be executed by Adobe I/O Runtime
 async function main(params: ActionParams): Promise<ActionResponse | ActionErrorResponse> {
@@ -34,7 +34,7 @@ async function main(params: ActionParams): Promise<ActionResponse | ActionErrorR
     const requiredParams: string[] = [
       /* add required params */
     ]
-    const requiredHeaders: string[] = ['authorization']
+    const requiredHeaders: string[] = []
     const errorMessage: string | null = checkMissingRequestInputs(
       params,
       requiredParams,
@@ -45,17 +45,28 @@ async function main(params: ActionParams): Promise<ActionResponse | ActionErrorR
       return errorResponse(400, errorMessage, logger)
     }
 
-    // Extract name parameter with proper validation and defaults
-    const name: string = (params.name as string)?.trim() || 'Guest'
-
-    // Create UserManager instance and get user with trimmed name
-    const userManager = new UserManager()
-    const user: User = userManager.get(name)
-
     const response: ActionResponse = {
       statusCode: 200,
       body: {
-        message: `Hello, ${user.name}!`
+        registration: {
+          menuItems: [
+            {
+              id: `${EXTENSION_ID}::first`,
+              title: 'Adobe Commerce First App on App Builder',
+              parent: `${EXTENSION_ID}::apps`,
+              sortOrder: 1
+            },
+            {
+              id: `${EXTENSION_ID}::apps`,
+              title: 'Apps',
+              isSection: true,
+              sortOrder: 100
+            }
+          ],
+          page: {
+            title: 'Adobe Commerce First App on App Builder'
+          }
+        }
       }
     }
 

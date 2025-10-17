@@ -41,3 +41,6 @@ coverage
 logs
 
 HPattaniExtCompile-*.json
+
+# Admin UI SDK
+admin-ui-sdk

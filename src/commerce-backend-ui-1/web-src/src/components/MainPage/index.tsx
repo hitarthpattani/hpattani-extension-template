@@ -19,6 +19,7 @@ export const MainPage: React.FC<MainPageProps> = ({ runtime: _runtime, ims }) =>
         ims.token = guestConnection?.sharedContext?.get('imsToken')
         ims.org = guestConnection?.sharedContext?.get('imsOrgId')
       }
+      console.log('after attach ims object', ims)
       setIsLoading(false)
     }
 
