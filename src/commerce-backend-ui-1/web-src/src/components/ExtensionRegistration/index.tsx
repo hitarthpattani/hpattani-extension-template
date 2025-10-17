@@ -10,12 +10,13 @@ import { EXTENSION_ID } from '@web/types/constants'
 
 export const ExtensionRegistration: React.FC<ExtensionRegistrationProps> = ({ runtime, ims }) => {
   useEffect(() => {
-    ;(async () => {
+    const init = async () => {
       await register({
         id: EXTENSION_ID,
         methods: {}
       })
-    })()
+    }
+    init()
   }, [])
 
   return <ActionsForm runtime={runtime} ims={ims} />
