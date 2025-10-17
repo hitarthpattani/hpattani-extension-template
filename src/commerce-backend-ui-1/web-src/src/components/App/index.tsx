@@ -3,8 +3,6 @@
  */
 
 import React, { Component } from 'react'
-import { Provider, lightTheme } from '@adobe/react-spectrum'
-import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import { ExtensionRegistration } from '@components/ExtensionRegistration'
 import type { AppProps } from './types'
 import type { ConfigurationData, HistoryData } from '@web/types'
@@ -58,18 +56,9 @@ const App: React.FC<AppProps> = props => {
   })
 
   return (
-    <Router>
-      <Provider theme={lightTheme} colorScheme={'light'}>
-        <CustomErrorBoundary>
-          <Routes>
-            <Route
-              index
-              element={<ExtensionRegistration runtime={props.runtime} ims={props.ims} />}
-            />
-          </Routes>
-        </CustomErrorBoundary>
-      </Provider>
-    </Router>
+    <CustomErrorBoundary>
+      <ExtensionRegistration runtime={props.runtime} ims={props.ims} />
+    </CustomErrorBoundary>
   )
 }
 
