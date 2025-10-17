@@ -4,7 +4,7 @@
 
 /* This file exposes the UserManager class for user management functionality */
 
-import type { User } from './types';
+import type { User } from './types'
 
 /**
  * UserManager class for managing user operations
@@ -25,22 +25,22 @@ export class UserManager {
    */
   public get(name: string): User {
     if (!name || typeof name !== 'string') {
-      throw new Error('Name must be a non-empty string');
+      throw new Error('Name must be a non-empty string')
     }
 
-    const trimmedName: string = name.trim();
+    const trimmedName: string = name.trim()
     if (trimmedName.length === 0) {
-      throw new Error('Name cannot be empty or whitespace only');
+      throw new Error('Name cannot be empty or whitespace only')
     }
 
     return {
-      name: trimmedName,
-    };
+      name: trimmedName
+    }
   }
 }
 
 // Export types for convenience
-export type { User } from './types';
+export type { User } from './types'
 
 // Export as default for backward compatibility
-export default UserManager;
+export default UserManager

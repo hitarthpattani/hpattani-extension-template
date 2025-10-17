@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2020",
     "lib": ["dom", "dom.iterable", "es6"],
+    "types": ["jest", "node"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -52,14 +53,14 @@
     "src/commerce-backend-ui-1/web-src/src/**/*",
     "src/commerce-backend-ui-1/actions/**/*",
     "src/commerce-backend-ui-1/lib/**/*",
-    "src/commerce-backend-ui-1/scripts/**/*"
+    "src/commerce-backend-ui-1/scripts/**/*",
+    "src/commerce-backend-ui-1/test/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "build",
     "coverage",
-    "src/commerce-backend-ui-1/test",
     "src/commerce-backend-ui-1/e2e",
     "src/commerce-backend-ui-1/web-src/src/exc-runtime.js"
   ]

@@ -2,6 +2,7 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src/commerce-backend-ui-1'],
   testMatch: ['**/test/**/*.+(ts|tsx|js)', '**/?(*.)+(spec|test).+(ts|tsx|js)'],
+  testPathIgnorePatterns: ['/node_modules/', '/e2e/', '/hooks/', '/web-src/'],
   transform: {
     '^.+\\.(ts|tsx)$': [
       'ts-jest',
@@ -16,7 +17,8 @@ module.exports = {
     '!src/commerce-backend-ui-1/**/node_modules/**',
     '!src/commerce-backend-ui-1/test/**',
     '!src/commerce-backend-ui-1/e2e/**',
-    '!src/commerce-backend-ui-1/web-src/src/exc-runtime.js'
+    '!src/commerce-backend-ui-1/hooks/**',
+    '!src/commerce-backend-ui-1/web-src/**'
   ],
   moduleNameMapper: {
     '^@actions/(.*)$': '<rootDir>/src/commerce-backend-ui-1/actions/$1',

@@ -8,5 +8,5 @@
  * User type definition
  */
 export interface User {
-  name: string;
+  name: string
 }
