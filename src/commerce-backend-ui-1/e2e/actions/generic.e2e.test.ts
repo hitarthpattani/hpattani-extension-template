@@ -17,4 +17,3 @@ test('returns a 401 when missing Authorization header', async () => {
   const res: Response = await fetch(actionUrl)
   expect(res.status).toBe(401)
 })
-
