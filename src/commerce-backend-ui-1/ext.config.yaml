@@ -13,7 +13,7 @@ runtimeManifest:
       license: Apache-2.0
       actions:
         $include: actions/example/actions.config.yaml
-    commerce-backend-ui-1:
+    admin-ui-sdk:
       license: Apache-2.0
       actions:
-        $include: actions/commerce-backend-ui-1/actions.config.yaml
+        $include: actions/admin-ui-sdk/actions.config.yaml

@@ -5,7 +5,7 @@
 import { Core } from '@adobe/aio-sdk'
 import type { ActionParams, ActionResponse } from '@actions/types'
 import { EXTENSION_ID } from '@actions/constants'
-import * as action from '../../../actions/commerce-backend-ui-1/registration/index'
+import * as action from '../../../actions/admin-ui-sdk/registration/index'
 import * as utils from '../../../actions/utils'
 
 jest.mock('@adobe/aio-sdk', () => ({

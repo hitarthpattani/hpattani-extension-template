@@ -42,5 +42,5 @@ logs
 
 HPattaniExtCompile-*.json
 
-# Admin UI SDK
-admin-ui-sdk
+# Admin UI SDK (root server only, not actions)
+/admin-ui-sdk

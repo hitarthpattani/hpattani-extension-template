@@ -9,7 +9,7 @@ describe('registration action e2e tests', () => {
 
   beforeEach(async () => {
     // Dynamically import the action before each test to ensure fresh state
-    action = await import('../../../actions/commerce-backend-ui-1/registration/index')
+    action = await import('../../../actions/admin-ui-sdk/registration/index')
     jest.clearAllMocks()
   })
 

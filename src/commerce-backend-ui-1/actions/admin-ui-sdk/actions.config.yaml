@@ -1,5 +1,5 @@
 registration:
-  function: ../../../../build/actions/commerce-backend-ui-1/registration/index.js
+  function: ../../../../build/actions/admin-ui-sdk/registration/index.js
   web: 'yes'
   runtime: nodejs:22
   inputs:
