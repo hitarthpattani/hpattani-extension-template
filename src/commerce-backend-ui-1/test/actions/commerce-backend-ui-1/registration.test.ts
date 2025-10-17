@@ -6,6 +6,7 @@ import { Core } from '@adobe/aio-sdk'
 import type { ActionParams, ActionResponse } from '@actions/types'
 import { EXTENSION_ID } from '@actions/constants'
 import * as action from '../../../actions/commerce-backend-ui-1/registration/index'
+import * as utils from '../../../actions/utils'
 
 jest.mock('@adobe/aio-sdk', () => ({
   Core: {
@@ -145,6 +146,72 @@ describe('registration action', () => {
       expect(registration.menuItems[0].id).toContain(EXTENSION_ID)
       expect(registration.menuItems[0].parent).toContain(EXTENSION_ID)
       expect(registration.menuItems[1].id).toContain(EXTENSION_ID)
+    })
+  })
+
+  describe('error handling', () => {
+    it('should return error when required parameters are missing', async () => {
+      const params: ActionParams = {
+        __ow_headers: {}
+      }
+
+      // Mock checkMissingRequestInputs to return an error message
+      const checkMissingRequestInputsSpy = jest
+        .spyOn(utils, 'checkMissingRequestInputs')
+        .mockReturnValueOnce("missing header(s) 'authorization'")
+
+      const response = await action.main(params)
+
+      expect(response).toHaveProperty('error')
+      const errorResponse = response as { error: { statusCode: number; body: { error: string } } }
+      expect(errorResponse.error.statusCode).toBe(400)
+      expect(errorResponse.error.body.error).toBe("missing header(s) 'authorization'")
+
+      checkMissingRequestInputsSpy.mockRestore()
+    })
+
+    it('should handle unexpected Error exceptions in catch block', async () => {
+      const params: ActionParams = {
+        __ow_headers: {}
+      }
+
+      // Mock logger.info to throw an error
+      mockLoggerInstance.info.mockImplementationOnce(() => {
+        throw new Error('Logger error')
+      })
+
+      const response = await action.main(params)
+
+      expect(response).toHaveProperty('error')
+      const errorResponse = response as { error: { statusCode: number; body: { error: string } } }
+      expect(errorResponse.error.statusCode).toBe(500)
+      expect(errorResponse.error.body.error).toBe('Internal server error')
+      expect(mockLoggerInstance.error).toHaveBeenCalledWith(
+        'Unexpected error in registration action:',
+        'Logger error'
+      )
+    })
+
+    it('should handle non-Error exceptions in catch block', async () => {
+      const params: ActionParams = {
+        __ow_headers: {}
+      }
+
+      // Mock logger.info to throw a non-Error exception
+      mockLoggerInstance.info.mockImplementationOnce(() => {
+        throw 'String error'
+      })
+
+      const response = await action.main(params)
+
+      expect(response).toHaveProperty('error')
+      const errorResponse = response as { error: { statusCode: number; body: { error: string } } }
+      expect(errorResponse.error.statusCode).toBe(500)
+      expect(errorResponse.error.body.error).toBe('Internal server error')
+      expect(mockLoggerInstance.error).toHaveBeenCalledWith(
+        'Unexpected error in registration action:',
+        'String error'
+      )
     })
   })
 })

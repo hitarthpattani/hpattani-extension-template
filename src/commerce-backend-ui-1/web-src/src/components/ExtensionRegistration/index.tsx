@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { MainPage } from '@components/MainPage'
+import ActionsForm from '@components/ActionsForm'
 import type { ExtensionRegistrationProps } from './types'
 import { register } from '@adobe/uix-guest'
 import { EXTENSION_ID } from '@web/types/constants'
@@ -18,5 +18,5 @@ export const ExtensionRegistration: React.FC<ExtensionRegistrationProps> = ({ ru
     })()
   }, [])
 
-  return <MainPage runtime={runtime} ims={ims} />
+  return <ActionsForm runtime={runtime} ims={ims} />
 }

@@ -74,15 +74,9 @@ async function main(params: ActionParams): Promise<ActionResponse | ActionErrorR
     logger.info(`${response.statusCode}: successful request`)
     return response
   } catch (error) {
-    // Handle UserManager validation errors as client errors (400)
-    if (error instanceof Error && error.message.includes('Name must be')) {
-      logger.warn(`UserManager validation error: ${error.message}`)
-      return errorResponse(400, `Invalid input: ${error.message}`, logger)
-    }
-
     // Handle unexpected errors as server errors (500)
     logger.error(
-      'Unexpected error in generic action:',
+      'Unexpected error in registration action:',
       error instanceof Error ? error.message : String(error)
     )
     return errorResponse(500, 'Internal server error', logger)
