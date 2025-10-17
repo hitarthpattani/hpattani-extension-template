@@ -17,7 +17,6 @@ module.exports = {
     '!src/commerce-backend-ui-1/**/node_modules/**',
     '!src/commerce-backend-ui-1/test/**',
     '!src/commerce-backend-ui-1/e2e/**',
-    '!src/commerce-backend-ui-1/hooks/**',
     '!src/commerce-backend-ui-1/web-src/**'
   ],
   moduleNameMapper: {

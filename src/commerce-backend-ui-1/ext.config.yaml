@@ -5,8 +5,8 @@ operations:
 actions: actions
 web: web-src
 hooks:
-  pre-app-build: src/commerce-backend-ui-1/hooks/pre-app-build.js
-  pre-app-deploy: src/commerce-backend-ui-1/hooks/pre-app-deploy.js
+  pre-app-build: hooks/pre-app-build.js
+  pre-app-deploy: hooks/pre-app-deploy.js
 runtimeManifest:
   packages:
     example:
