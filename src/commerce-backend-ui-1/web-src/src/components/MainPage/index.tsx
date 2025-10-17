@@ -18,6 +18,7 @@ export const MainPage: React.FC<MainPageProps> = ({ runtime: _runtime, ims }) =>
         const guestConnection = await attach({ id: EXTENSION_ID })
         ims.token = guestConnection?.sharedContext?.get('imsToken')
         ims.org = guestConnection?.sharedContext?.get('imsOrgId')
+        console.log('ims object', ims)
       }
       setIsLoading(false)
     }
