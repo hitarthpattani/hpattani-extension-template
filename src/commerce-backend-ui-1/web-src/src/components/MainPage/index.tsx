@@ -3,8 +3,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Heading, View, Flex, ProgressCircle, Provider, lightTheme } from '@adobe/react-spectrum'
-import { HashRouter as Router, Routes, Route } from 'react-router-dom'
+import { Heading, View, Flex, ProgressCircle } from '@adobe/react-spectrum'
 import type { MainPageProps } from './types'
 import { attach } from '@adobe/uix-guest'
 import { EXTENSION_ID } from '@web/types/constants'
@@ -19,14 +18,13 @@ export const MainPage: React.FC<MainPageProps> = ({ runtime: _runtime, ims }) =>
         ims.token = guestConnection?.sharedContext?.get('imsToken')
         ims.org = guestConnection?.sharedContext?.get('imsOrgId')
       }
-      console.log('after attach ims object', ims)
       setIsLoading(false)
     }
 
     fetchCredentials()
   }, [])
 
-  const renderContent = () => (
+  return (
     <View>
       {isLoading ? (
         <Flex alignItems="center" justifyContent="center" height="100vh">
@@ -38,15 +36,5 @@ export const MainPage: React.FC<MainPageProps> = ({ runtime: _runtime, ims }) =>
         </View>
       )}
     </View>
-  )
-
-  return (
-    <Router>
-      <Provider theme={lightTheme} colorScheme={'light'}>
-        <Routes>
-          <Route index element={renderContent()} />
-        </Routes>
-      </Provider>
-    </Router>
   )
 }
